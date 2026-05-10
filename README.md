@@ -64,6 +64,22 @@ A modern, full-stack productivity platform built with **Flask**, **PostgreSQL**,
 
 ---
 
+## 🎬 Demo Video
+
+> **Full walkthrough** — authentication, task management, realtime updates, and analytics in action.
+
+<p align="center">
+  <a href="https://github.com/your-username/smart-tasks/releases/latest">
+    <img src="https://img.shields.io/badge/▶_Watch_Demo-Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo Video" />
+  </a>
+</p>
+
+📁 **Local copy:** [`demo/demo_video.mp4`](demo/demo_video.mp4)
+
+> **Note:** The demo video (~55 MB) is available as a [GitHub Release](https://github.com/your-username/smart-tasks/releases/latest) asset to keep the repository lightweight. Download or stream it directly from the Releases page.
+
+---
+
 ## 🏗️ Architecture Overview
 
 ```
@@ -380,6 +396,42 @@ All analytics are computed server-side using **Pandas DataFrames** and **NumPy**
 
 ---
 
+## 🗄️ Database
+
+This project uses **PostgreSQL** as the primary relational database, managed through **Flask-Migrate** (Alembic) for version-controlled schema migrations.
+
+| Component | Details |
+|---|---|
+| **Engine** | PostgreSQL 16+ |
+| **ORM** | SQLAlchemy + Flask-SQLAlchemy |
+| **Migrations** | Flask-Migrate (Alembic) — `migrations/` |
+| **Schema Export** | `database/schema.sql` — full DDL (tables, constraints, foreign keys) |
+| **Seed Script** | `scripts/seed_demo.py` — demo user & sample tasks |
+
+### Schema Overview
+
+```
+users
+├── id              (PK, serial)
+├── username        (varchar 80, NOT NULL)
+├── email           (varchar 120, UNIQUE, NOT NULL)
+├── password_hash   (varchar 255, NOT NULL)
+└── created_at      (timestamp, DEFAULT CURRENT_TIMESTAMP)
+
+tasks
+├── id              (PK, serial)
+├── title           (varchar 200, NOT NULL)
+├── description     (text, nullable)
+├── priority        (varchar 20, NOT NULL, default 'Medium')
+├── status          (varchar 20, NOT NULL, default 'Pending')
+├── created_at      (timestamp, DEFAULT CURRENT_TIMESTAMP)
+└── user_id         (FK → users.id, NOT NULL)
+```
+
+> **Note:** The full PostgreSQL DDL export is available at [`database/schema.sql`](database/schema.sql) — suitable for recreating the database without running migrations.
+
+---
+
 ## ⚡ Realtime Features (SocketIO)
 
 The platform uses **Flask-SocketIO** for bidirectional WebSocket communication. When any task is created, updated, or deleted, the server emits an event to all connected clients.
@@ -423,8 +475,13 @@ smart-tasks/
 ├── config.py               # Centralized configuration with DB URI builder
 ├── requirements.txt        # Pinned Python dependencies
 ├── run.py                  # SocketIO-powered app launcher
+├── database/
+│   └── schema.sql          # PostgreSQL schema export (DDL only)
+├── demo/
+│   └── demo_video.mp4      # Full walkthrough recording (git-ignored)
 ├── migrations/             # Alembic migration versions
-├── scripts/                # Utility scripts (seeder)
+├── scripts/
+│   └── seed_demo.py        # Demo data seeder
 ├── screenshots/            # Application screenshots for README
 └── app/                    # Main application package
     ├── models/             # Data layer (User, Task)
