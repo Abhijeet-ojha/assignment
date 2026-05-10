@@ -69,14 +69,12 @@ A modern, full-stack productivity platform built with **Flask**, **PostgreSQL**,
 > **Full walkthrough** — authentication, task management, realtime updates, and analytics in action.
 
 <p align="center">
-  <a href="https://github.com/your-username/smart-tasks/releases/latest">
+  <a href="https://github.com/Abhijeet-ojha/assignment/releases/tag/demo">
     <img src="https://img.shields.io/badge/▶_Watch_Demo-Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo Video" />
   </a>
 </p>
 
-📁 **Local copy:** [`demo/demo_video.mp4`](demo/demo_video.mp4)
-
-> **Note:** The demo video (~55 MB) is available as a [GitHub Release](https://github.com/your-username/smart-tasks/releases/latest) asset to keep the repository lightweight. Download or stream it directly from the Releases page.
+> **Note:** The demo video (~55 MB) is hosted as a [GitHub Release](https://github.com/Abhijeet-ojha/assignment/releases/tag/demo) asset to keep the repository lightweight. Download or stream it directly from the Releases page.
 
 ---
 
