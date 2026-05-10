@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Tasks | Dashboard</title>
+    <meta name="description" content="Smart Task Management System — track priorities, ship meaningful work, and gain productivity insights." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/dashboard.css" />
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- ═══════ SIDEBAR ═══════ -->
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-dot"></span>
+          Smart Tasks
+        </div>
+        <nav class="nav" id="sidebarNav">
+          <a class="nav-item active" href="#" data-view="dashboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </a>
+          <a class="nav-item" href="#" data-view="tasks">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            My Tasks
+          </a>
+          <a class="nav-item" href="#" data-view="analytics">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Analytics
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-pill" id="userPill">
+            <span class="user-avatar">D</span>
+            <span class="user-name" id="userName">User</span>
+          </div>
+          <button id="logoutBtn" class="btn-ghost">Sign out</button>
+        </div>
+      </aside>
+
+      <!-- ═══════ MAIN ═══════ -->
+      <main class="main-content">
+
+        <!-- ──── DASHBOARD VIEW ──── -->
+        <section id="view-dashboard" class="view-section active-view">
+          <header class="topbar">
+            <div>
+              <h1>Workspace Overview</h1>
+              <p class="subtitle">Track priorities and ship meaningful work.</p>
+            </div>
+          </header>
+
+          <div class="analytics-grid" id="dashboardMetrics">
+            <article class="metric-card skeleton">
+              <p>Total Tasks</p>
+              <h2 id="dashTotal">—</h2>
+            </article>
+            <article class="metric-card accent skeleton">
+              <p>Completed</p>
+              <h2 id="dashCompleted">—</h2>
+            </article>
+            <article class="metric-card skeleton">
+              <p>Pending</p>
+              <h2 id="dashPending">—</h2>
+            </article>
+            <article class="metric-card accent-alt skeleton">
+              <p>Completion</p>
+              <h2 id="dashCompletion">—</h2>
+            </article>
+          </div>
+
+          <div class="content-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Recent Tasks</h3>
+              </div>
+              <div id="recentTaskList" class="task-list">
+                <div class="loading-state">Loading recent tasks…</div>
+              </div>
+            </div>
+
+            <div class="panel live-panel">
+              <div class="panel-header">
+                <h3>
+                  <span class="live-dot"></span>
+                  Realtime Feed
+                </h3>
+              </div>
+              <ul id="realtimeFeed" class="realtime-feed">
+                <li class="realtime-item muted">Waiting for activity…</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ──── MY TASKS VIEW ──── -->
+        <section id="view-tasks" class="view-section hidden">
+          <header class="topbar">
+            <div>
+              <h1>My Tasks</h1>
+              <p class="subtitle">Manage, filter, and organize your work.</p>
+            </div>
+            <div class="topbar-actions">
+              <button id="openTaskModal" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New Task
+              </button>
+            </div>
+          </header>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Task Board</h3>
+              <div class="filters">
+                <select id="statusFilter">
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Completed">Completed</option>
+                </select>
+                <select id="priorityFilter">
+                  <option value="">All Priorities</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+            <div id="taskList" class="task-list">
+              <div class="loading-state">Loading tasks…</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ──── ANALYTICS VIEW ──── -->
+        <section id="view-analytics" class="view-section hidden">
+          <header class="topbar">
+            <div>
+              <h1>Analytics</h1>
+              <p class="subtitle">Productivity insights powered by Pandas & NumPy.</p>
+            </div>
+          </header>
+
+          <!-- Insight strip -->
+          <div class="insights-strip" id="insightsStrip">
+            <div class="insight-card skeleton">
+              <span class="insight-icon">🎯</span>
+              <div>
+                <p class="insight-label">Productivity Score</p>
+                <h2 id="analyticsProductivity" class="insight-value">—</h2>
+              </div>
+            </div>
+            <div class="insight-card skeleton">
+              <span class="insight-icon">🔥</span>
+              <div>
+                <p class="insight-label">Streak</p>
+                <h2 id="analyticsStreak" class="insight-value">— days</h2>
+              </div>
+            </div>
+            <div class="insight-card skeleton">
+              <span class="insight-icon">⚡</span>
+              <div>
+                <p class="insight-label">Velocity</p>
+                <h2 id="analyticsVelocity" class="insight-value">—/day</h2>
+              </div>
+            </div>
+            <div class="insight-card skeleton">
+              <span class="insight-icon">📊</span>
+              <div>
+                <p class="insight-label">Avg Tasks/Day</p>
+                <h2 id="analyticsAvgDaily" class="insight-value">—</h2>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completion progress -->
+          <div class="panel progress-panel">
+            <div class="panel-header">
+              <h3>Overall Completion</h3>
+              <span class="progress-label" id="progressLabel">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-meta">
+              <span><strong id="progCompleted">0</strong> completed</span>
+              <span><strong id="progPending">0</strong> pending</span>
+              <span><strong id="progTotal">0</strong> total</span>
+            </div>
+          </div>
+
+          <!-- Charts row -->
+          <div class="charts-grid">
+            <div class="panel chart-panel">
+              <div class="panel-header"><h3>Status Distribution</h3></div>
+              <div class="chart-wrap">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+            <div class="panel chart-panel">
+              <div class="panel-header"><h3>Priority Breakdown</h3></div>
+              <div class="chart-wrap">
+                <canvas id="priorityChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Priority completion table -->
+          <div class="panel">
+            <div class="panel-header"><h3>Priority Completion Rates</h3></div>
+            <div class="stat-table" id="priorityCompletionTable">
+              <div class="loading-state">Loading analytics…</div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ═══════ TASK MODAL ═══════ -->
+    <div id="taskModal" class="modal hidden">
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal-content">
+        <header class="modal-header">
+          <h3 id="modalTitle">Create task</h3>
+          <button id="closeTaskModal" class="modal-close">&times;</button>
+        </header>
+        <form id="taskForm" class="modal-form">
+          <input type="hidden" name="taskId" />
+          <label>
+            Title
+            <input type="text" name="title" placeholder="What needs to be done?" required />
+          </label>
+          <label>
+            Description
+            <textarea name="description" rows="3" placeholder="Add details…"></textarea>
+          </label>
+          <div class="form-row">
+            <label>
+              Priority
+              <select name="priority">
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </label>
+            <label>
+              Status
+              <select name="status">
+                <option value="Pending" selected>Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit" class="btn-primary btn-full">Save Task</button>
+          <p class="form-hint" id="taskMessage"></p>
+        </form>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/static/js/sockets.js"></script>
+    <script src="/static/js/analytics.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+  </body>
+</html>

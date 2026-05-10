@@ -6,9 +6,15 @@ load_dotenv()
 
 
 def _build_db_uri():
+    # If DATABASE_URL is explicitly set, use it
     url = os.getenv("DATABASE_URL")
     if url:
         return url
+    
+    # Check if we should use SQLite for development
+    db_type = os.getenv("DB_TYPE", "postgresql").lower()
+    if db_type == "sqlite":
+        return "sqlite:///smart_tasks.db"
 
     user = os.getenv("DB_USER", "postgres")
     password = os.getenv("DB_PASSWORD", "postgres")

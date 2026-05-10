@@ -22,6 +22,10 @@ def create_app():
     jwt.init_app(app)
     socketio.init_app(app)
 
+    from app.sockets import register_socket_events
+
+    register_socket_events(socketio)
+
     # Import models so they are registered with SQLAlchemy before migrations run.
     # Use importlib.import_module to avoid binding the name `app` (which would
     # shadow the Flask application instance during this function).
@@ -40,9 +44,12 @@ def create_app():
     # deployment health checks instead.
 
     # Register routes/blueprints
-    from app.routes import health_bp, auth_bp
+    from app.routes import analytics_bp, auth_bp, health_bp, pages_bp, tasks_bp
 
     app.register_blueprint(health_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(tasks_bp)
+    app.register_blueprint(analytics_bp)
+    app.register_blueprint(pages_bp)
 
     return app

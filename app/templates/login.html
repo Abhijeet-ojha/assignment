@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Tasks | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/login.css" />
+  </head>
+  <body>
+    <main class="auth-shell">
+      <section class="auth-card">
+        <header class="auth-header">
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            Smart Tasks
+          </div>
+          <h1>Welcome back</h1>
+          <p>Sign in to your workspace and continue building momentum.</p>
+        </header>
+
+        <form id="loginForm" class="auth-form">
+          <label>
+            Email
+            <input type="email" name="email" placeholder="you@company.com" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Your password" required />
+          </label>
+          <button type="submit" class="btn-primary">Sign in</button>
+          <p class="form-hint" id="loginMessage"></p>
+        </form>
+
+        <footer class="auth-footer">
+          <span>New here?</span>
+          <a href="#" class="ghost-link">Request access</a>
+        </footer>
+      </section>
+    </main>
+
+    <script src="/static/js/auth.js"></script>
+  </body>
+</html>
