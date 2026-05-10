@@ -12,6 +12,3 @@ instance/
 .vscode/
 .idea/
 
-# Demo video (upload to GitHub Releases instead)
-demo/*.mp4
-demo/*.webm
